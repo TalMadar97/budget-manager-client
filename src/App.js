@@ -8,6 +8,8 @@ import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import AddTransaction from "./pages/AddTransaction";
 import Settings from "./pages/Settings";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
@@ -72,7 +74,7 @@ const App = () => {
           </li>
         </ul>
       </nav>
-
+      <ToastContainer position="top-center" autoClose={3000} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />

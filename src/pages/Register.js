@@ -1,122 +1,88 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const [errors, setErrors] = useState({});
+  const [name, setName] = useState(""); // ✅ הוספת שדה שם
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // Regular Expressions
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    // Validate fields
-    if (e.target.name === "email") {
-      setErrors({
-        ...errors,
-        email: emailRegex.test(e.target.value) ? "" : "Invalid email format",
-      });
-    }
-    if (e.target.name === "password") {
-      setErrors({
-        ...errors,
-        password: passwordRegex.test(e.target.value)
-          ? ""
-          : "Password must be at least 8 characters, contain one uppercase letter, and one special character (!@#$%^&*)",
-      });
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Final validation check
-    if (!emailRegex.test(formData.email)) {
-      setErrors({ ...errors, email: "Invalid email format" });
-      return;
+    // ✅ הוספת בדיקת שם
+    if (!name.trim()) {
+      return toast.error("Name is required.");
     }
-    if (!passwordRegex.test(formData.password)) {
-      setErrors({
-        ...errors,
-        password:
-          "Password must be at least 8 characters, contain one uppercase letter, and one special character (!@#$%^&*)",
-      });
-      return;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+
+    if (!emailRegex.test(email)) {
+      return toast.error("Invalid email format.");
+    }
+    if (!passwordRegex.test(password)) {
+      return toast.error(
+        "Password must have at least 8 characters, one uppercase letter, and one special character."
+      );
     }
 
     try {
       const response = await fetch("http://localhost:8181/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }), // ✅ שליחת name
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert("Registration successful! Please log in.");
-        navigate("/login");
-      } else {
-        alert(data.message || "Registration failed");
-      }
+      if (!response.ok) throw new Error("Registration failed");
+
+      toast.success("Registration successful! 🎉");
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
-      alert("An error occurred. Please try again.");
+      toast.error("Error: " + error.message);
     }
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="container">
+      <h2 className="mb-4">Register</h2>
+      <form onSubmit={handleRegister}>
+        {/* ✅ שדה שם חדש */}
         <div className="mb-3">
-          <label className="form-label">Name</label>
+          <label>Name</label>
           <input
             type="text"
-            name="name"
             className="form-control"
-            placeholder="Enter your name"
-            onChange={handleChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
+
         <div className="mb-3">
-          <label className="form-label">Email</label>
+          <label>Email</label>
           <input
             type="email"
-            name="email"
-            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-            placeholder="Enter your email"
-            onChange={handleChange}
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {errors.email && (
-            <div className="invalid-feedback">{errors.email}</div>
-          )}
         </div>
+
         <div className="mb-3">
-          <label className="form-label">Password</label>
+          <label>Password</label>
           <input
             type="password"
-            name="password"
-            className={`form-control ${errors.password ? "is-invalid" : ""}`}
-            placeholder="Enter your password"
-            onChange={handleChange}
+            className="form-control"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {errors.password && (
-            <div className="invalid-feedback">{errors.password}</div>
-          )}
         </div>
-        <button type="submit" className="btn btn-primary">
+
+        <button type="submit" className="btn btn-primary w-100">
           Register
         </button>
       </form>
