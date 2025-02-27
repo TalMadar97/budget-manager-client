@@ -45,8 +45,8 @@ const Register = () => {
   };
 
   return (
-    <div className="container">
-      <h2 className="mb-4">Register</h2>
+    <div className="p-4">
+      <h2 className="p-3 bg-light rounded shadow-sm text-center">Register</h2>
       <form onSubmit={handleRegister}>
         {/* ✅ שדה שם חדש */}
         <div className="mb-3">

@@ -54,7 +54,11 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <NavLink
-                className="nav-link text-white fw-bold bg-primary px-3 rounded"
+                className={({ isActive }) =>
+                  isActive
+                    ? "nav-link text-white fw-bold bg-primary px-3 rounded"
+                    : "nav-link text-primary"
+                }
                 to="/login"
               >
                 Login

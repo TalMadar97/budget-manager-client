@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,15 +19,15 @@ const Login = () => {
       if (!response.ok) throw new Error("Invalid credentials");
 
       toast.success("Login successful! 🎉");
-      setTimeout(() => navigate("/dashboard"), 2000); 
+      setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error) {
       toast.error("Error: " + error.message);
     }
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
+    <div className="p-4">
+      <h2 className="p-3 bg-light rounded shadow-sm text-center">Login</h2>
       <form onSubmit={handleLogin}>
         <div className="mb-3">
           <label>Email</label>
