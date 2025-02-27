@@ -63,3 +63,7 @@ a {
 a:hover {
   color: #007bff;
 }
+
+.navbar-nav .nav-link.active {
+  font-weight: bold;
+}

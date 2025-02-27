@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link, NavLink } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -12,43 +12,63 @@ import Settings from "./pages/Settings";
 const App = () => {
   return (
     <div className="container mt-4">
-      <h1 className="mb-4">Budget Manager</h1>
+      <h1 className="text-center mb-4">Budget Manager</h1>
       <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <Link className="nav-link" to="/">
+            <NavLink className="nav-link" to="/">
               Home
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/dashboard">
+            <NavLink
+              className="nav-link"
+              to="/dashboard"
+              activeclassname="active"
+            >
               Dashboard
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/transactions">
+            <NavLink
+              className="nav-link"
+              to="/transactions"
+              activeclassname="active"
+            >
               Transactions
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/add-transaction">
+            <NavLink
+              className="nav-link"
+              to="/add-transaction"
+              activeclassname="active"
+            >
               Add Transaction
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/settings">
+            <NavLink
+              className="nav-link"
+              to="/settings"
+              activeclassname="active"
+            >
               Settings
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/register">
+            <NavLink
+              className="nav-link"
+              to="/register"
+              activeclassname="active"
+            >
               Register
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/login">
+            <NavLink className="nav-link" to="/login" activeclassname="active">
               Login
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </nav>
