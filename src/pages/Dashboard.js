@@ -1,19 +1,20 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
-function Dashboard() {
+const Dashboard = () => {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <nav className="mt-4">
-        <Link to="/transactions" className="text-blue-500 mr-4">
+    <div className="container mt-4">
+      <h2 className="p-3 bg-light rounded shadow-sm text-center">Dashboard</h2>
+      <div className="d-flex gap-3">
+        <Link to="/transactions" className="btn btn-primary">
           View Transactions
         </Link>
-        <Link to="/add-transaction" className="text-blue-500">
+        <Link to="/add-transaction" className="btn btn-success">
           Add Transaction
         </Link>
-      </nav>
+      </div>
     </div>
   );
-}
+};
 
 export default Dashboard;

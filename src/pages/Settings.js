@@ -1,7 +1,7 @@
 function Settings() {
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">Settings</h1>
+      <h2 className="p-3 bg-light rounded shadow-sm text-center">Settings</h2>
       <p>Budget settings and user preferences will go here...</p>
     </div>
   );
