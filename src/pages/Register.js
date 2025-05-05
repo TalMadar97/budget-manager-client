@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Register = () => {
-  const [name, setName] = useState(""); // ✅ הוספת שדה שם
+  const [name, setName] = useState(""); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,7 +11,6 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // ✅ הוספת בדיקת שם
     if (!name.trim()) {
       return toast.error("Name is required.");
     }
@@ -32,7 +31,7 @@ const Register = () => {
       const response = await fetch("http://localhost:8181/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }), // ✅ שליחת name
+        body: JSON.stringify({ name, email, password }), 
       });
 
       if (!response.ok) throw new Error("Registration failed");
@@ -48,7 +47,6 @@ const Register = () => {
     <div className="p-4">
       <h2 className="p-3 bg-light rounded shadow-sm text-center">Register</h2>
       <form onSubmit={handleRegister}>
-        {/* ✅ שדה שם חדש */}
         <div className="mb-3">
           <label>Name</label>
           <input
