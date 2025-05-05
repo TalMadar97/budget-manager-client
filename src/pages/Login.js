@@ -18,6 +18,10 @@ const Login = () => {
 
       if (!response.ok) throw new Error("Invalid credentials");
 
+      const data = await response.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
+
       toast.success("Login successful! 🎉");
       setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error) {
@@ -49,7 +53,7 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-success">
+        <button type="submit" className="btn btn-success w-100">
           Login
         </button>
       </form>

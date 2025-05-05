@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Register = () => {
-  const [name, setName] = useState(""); 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,16 +11,12 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    if (!name.trim()) {
-      return toast.error("Name is required.");
-    }
+    if (!name.trim()) return toast.error("Name is required.");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 
-    if (!emailRegex.test(email)) {
-      return toast.error("Invalid email format.");
-    }
+    if (!emailRegex.test(email)) return toast.error("Invalid email format.");
     if (!passwordRegex.test(password)) {
       return toast.error(
         "Password must have at least 8 characters, one uppercase letter, and one special character."
@@ -31,14 +27,20 @@ const Register = () => {
       const response = await fetch("http://localhost:8181/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }), 
+        body: JSON.stringify({ name, email, password }),
       });
 
-      if (!response.ok) throw new Error("Registration failed");
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Registration error:", data.message);
+        throw new Error(data.message || "Registration failed");
+      }
 
       toast.success("Registration successful! 🎉");
       setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
+      console.error("Client-side error:", error);
       toast.error("Error: " + error.message);
     }
   };
