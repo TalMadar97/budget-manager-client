@@ -47,7 +47,7 @@ const Dashboard = () => {
       </h2>
 
       <div className="alert alert-info text-center fs-4">
-        💰 Current Budget: <strong>${user.budget}</strong>
+        Current Budget: <strong>{user.budget} ₪</strong>
       </div>
 
       <div className="d-flex gap-3 justify-content-center mt-3">

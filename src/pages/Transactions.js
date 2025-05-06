@@ -48,13 +48,21 @@ function Transactions() {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((tx) => (
-                <tr key={tx._id}>
-                  <td>{tx.type}</td>
-                  <td>${tx.amount}</td>
+              {transactions.map((tx, index) => (
+                <tr
+                  key={tx._id}
+                  className={
+                    tx.type === "income" ? "table-success" : "table-danger"
+                  }
+                  style={{
+                    backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
+                  }}
+                >
+                  <td className="text-capitalize">{tx.type}</td>
+                  <td>₪{tx.amount.toLocaleString()}</td>
                   <td>{tx.category}</td>
                   <td>{tx.description}</td>
-                  <td>{new Date(tx.date).toLocaleDateString()}</td>
+                  <td>{new Date(tx.date).toLocaleDateString("he-IL")}</td>
                 </tr>
               ))}
             </tbody>
