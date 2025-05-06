@@ -1,26 +1,24 @@
-// ✅ Transactions.jsx - כולל כפתור מחיקה
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [typeFilter, setTypeFilter] = useState("");
 
   const fetchTransactions = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:8181/api/transactions", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch transactions");
-      }
-
+      if (!response.ok) throw new Error("Failed to fetch transactions");
       const data = await response.json();
       setTransactions(data);
+      setFiltered(data);
     } catch (error) {
       toast.error("Error: " + error.message);
     }
@@ -31,29 +29,60 @@ function Transactions() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this transaction?")) {
+    if (!window.confirm("Are you sure you want to delete this transaction?"))
       return;
-    }
 
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`http://localhost:8181/api/transactions/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete transaction");
-      }
+      if (!res.ok) throw new Error("Failed to delete transaction");
 
       toast.success("Transaction deleted");
-      // ⬇️ עדכון הרשימה אחרי מחיקה
-      setTransactions((prev) => prev.filter((tx) => tx._id !== id));
+      const updated = transactions.filter((tx) => tx._id !== id);
+      setTransactions(updated);
+      setFiltered(updated);
     } catch (err) {
       toast.error("Error: " + err.message);
     }
+  };
+
+  const handleSort = (field) => {
+    const order = sortBy === field && sortOrder === "asc" ? "desc" : "asc";
+    const sorted = [...filtered].sort((a, b) => {
+      if (field === "amount") {
+        return order === "asc" ? a.amount - b.amount : b.amount - a.amount;
+      }
+      if (field === "date") {
+        return order === "asc"
+          ? new Date(a.date) - new Date(b.date)
+          : new Date(b.date) - new Date(a.date);
+      }
+      return order === "asc"
+        ? a[field].localeCompare(b[field])
+        : b[field].localeCompare(a[field]);
+    });
+
+    setSortBy(field);
+    setSortOrder(order);
+    setFiltered(sorted);
+  };
+
+  const handleFilter = (e) => {
+    const value = e.target.value;
+    setTypeFilter(value);
+    setFiltered(
+      value === ""
+        ? transactions
+        : transactions.filter((tx) => tx.type === value)
+    );
+  };
+
+  const renderArrow = (field) => {
+    if (sortBy !== field) return "↕";
+    return sortOrder === "asc" ? "↑" : "↓";
   };
 
   return (
@@ -61,23 +90,57 @@ function Transactions() {
       <h2 className="p-3 bg-light rounded shadow-sm text-center">
         Transactions
       </h2>
-      {transactions.length === 0 ? (
+
+      <div className="mb-3 d-flex justify-content-end align-items-center">
+        <label className="me-2 fw-bold">Filter by type:</label>
+        <select
+          className="form-select w-auto"
+          value={typeFilter}
+          onChange={handleFilter}
+        >
+          <option value="">All</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+
+      {filtered.length === 0 ? (
         <p className="text-center">No transactions found.</p>
       ) : (
         <div className="table-responsive">
           <table className="table table-bordered table-hover">
             <thead className="table-light">
               <tr>
-                <th>Type</th>
-                <th>Amount (₪)</th>
-                <th>Category</th>
+                <th
+                  onClick={() => handleSort("type")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Type {renderArrow("type")}
+                </th>
+                <th
+                  onClick={() => handleSort("amount")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Amount (₪) {renderArrow("amount")}
+                </th>
+                <th
+                  onClick={() => handleSort("category")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Category {renderArrow("category")}
+                </th>
                 <th>Description</th>
-                <th>Date</th>
+                <th
+                  onClick={() => handleSort("date")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Date {renderArrow("date")}
+                </th>
                 <th style={{ width: "100px" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {transactions.map((tx, index) => (
+              {filtered.map((tx, index) => (
                 <tr
                   key={tx._id}
                   className={index % 2 === 0 ? "bg-white" : "bg-light"}
