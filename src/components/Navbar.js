@@ -1,8 +1,16 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
       <div className="container">
@@ -47,23 +55,37 @@ const Navbar = () => {
                 Settings
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link text-success fw-bold" to="/register">
-                Register
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? "nav-link text-white fw-bold bg-primary px-3 rounded"
-                    : "nav-link text-primary"
-                }
-                to="/login"
-              >
-                Login
-              </NavLink>
-            </li>
+
+            {!token ? (
+              <>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link text-success fw-bold"
+                    to="/register"
+                  >
+                    Register
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link text-white fw-bold bg-primary px-3 rounded"
+                        : "nav-link text-primary"
+                    }
+                    to="/login"
+                  >
+                    Login
+                  </NavLink>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </div>
