@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import TransactionChart from "../components/TransactionChart"; 
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -50,7 +51,7 @@ const Dashboard = () => {
         Current Budget: <strong>{user.budget} ₪</strong>
       </div>
 
-      <div className="d-flex gap-3 justify-content-center mt-3">
+      <div className="d-flex gap-3 justify-content-center mt-3 mb-4">
         <Link to="/transactions" className="btn btn-primary">
           View Transactions
         </Link>
@@ -58,6 +59,8 @@ const Dashboard = () => {
           Add Transaction
         </Link>
       </div>
+
+      <TransactionChart />
     </div>
   );
 };
