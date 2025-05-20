@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import TransactionChart from "../components/TransactionChart"; 
+import TransactionChart from "../components/TransactionChart";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchUser = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -15,31 +16,35 @@ const Dashboard = () => {
       return navigate("/login");
     }
 
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("http://localhost:8181/api/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8181/api/auth/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        if (!res.ok) {
-          throw new Error("Unauthorized");
-        }
-
-        const data = await res.json();
-        setUser(data);
-      } catch (error) {
-        toast.error("Session expired. Please login again.");
-        localStorage.removeItem("token");
-        navigate("/login");
+      if (!res.ok) {
+        throw new Error("Unauthorized");
       }
-    };
 
+      const data = await res.json();
+      setUser(data);
+    } catch (error) {
+      toast.error("Session expired. Please login again.");
+      localStorage.removeItem("token");
+      navigate("/login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUser();
   }, [navigate]);
 
-  if (!user) return <div className="p-4 text-center">Loading dashboard...</div>;
+  if (!user || loading)
+    return <div className="p-4 text-center">Loading dashboard...</div>;
 
   return (
     <div className="container mt-4">
@@ -47,11 +52,20 @@ const Dashboard = () => {
         Welcome, {user.name}!
       </h2>
 
-      <div className="alert alert-info text-center fs-4">
-        Current Budget: <strong>{user.budget} ₪</strong>
-      </div>
+      {user.budget && user.budget > 0 ? (
+        <div className="alert alert-info text-center fs-4 mt-3">
+          Current Budget: <strong>{user.budget} ₪</strong>
+        </div>
+      ) : (
+        <div className="alert alert-warning text-center fs-5 mt-3">
+          You haven’t set a budget yet.{" "}
+          <Link to="/settings" className="fw-bold">
+            Set your budget now →
+          </Link>
+        </div>
+      )}
 
-      <div className="d-flex gap-3 justify-content-center mt-3 mb-4">
+      <div className="d-flex gap-3 justify-content-center mt-3">
         <Link to="/transactions" className="btn btn-primary">
           View Transactions
         </Link>
