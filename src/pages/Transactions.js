@@ -9,6 +9,15 @@ function Transactions() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [typeFilter, setTypeFilter] = useState("");
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginated = filtered.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const fetchTransactions = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -68,21 +77,29 @@ function Transactions() {
     setSortBy(field);
     setSortOrder(order);
     setFiltered(sorted);
+    setCurrentPage(1); // reset page
   };
 
   const handleFilter = (e) => {
     const value = e.target.value;
     setTypeFilter(value);
-    setFiltered(
+    const result =
       value === ""
         ? transactions
-        : transactions.filter((tx) => tx.type === value)
-    );
+        : transactions.filter((tx) => tx.type === value);
+    setFiltered(result);
+    setCurrentPage(1);
   };
 
   const renderArrow = (field) => {
     if (sortBy !== field) return "↕";
     return sortOrder === "asc" ? "↑" : "↓";
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   return (
@@ -107,76 +124,120 @@ function Transactions() {
       {filtered.length === 0 ? (
         <p className="text-center">No transactions found.</p>
       ) : (
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover">
-            <thead className="table-light">
-              <tr>
-                <th
-                  onClick={() => handleSort("type")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Type {renderArrow("type")}
-                </th>
-                <th
-                  onClick={() => handleSort("amount")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Amount (₪) {renderArrow("amount")}
-                </th>
-                <th
-                  onClick={() => handleSort("category")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Category {renderArrow("category")}
-                </th>
-                <th>Description</th>
-                <th
-                  onClick={() => handleSort("date")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Date {renderArrow("date")}
-                </th>
-                <th style={{ width: "100px" }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((tx, index) => (
-                <tr
-                  key={tx._id}
-                  className={index % 2 === 0 ? "bg-white" : "bg-light"}
-                >
-                  <td
-                    className={
-                      tx.type === "income"
-                        ? "text-success fw-bold"
-                        : "text-danger fw-bold"
-                    }
+        <>
+          <div className="table-responsive">
+            <table className="table table-bordered table-hover">
+              <thead className="table-light">
+                <tr>
+                  <th
+                    onClick={() => handleSort("type")}
+                    style={{ cursor: "pointer" }}
                   >
-                    {tx.type}
-                  </td>
-                  <td>₪{tx.amount}</td>
-                  <td>{tx.category}</td>
-                  <td>{tx.description}</td>
-                  <td>{new Date(tx.date).toLocaleDateString()}</td>
-                  <td className="text-center">
-                    <Link
-                      to={`/edit-transaction/${tx._id}`}
-                      className="btn btn-sm btn-outline-primary me-2"
-                    >
-                      🖉
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(tx._id)}
-                      className="btn btn-sm btn-outline-danger"
-                    >
-                      🗑️
-                    </button>
-                  </td>
+                    Type {renderArrow("type")}
+                  </th>
+                  <th
+                    onClick={() => handleSort("amount")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Amount (₪) {renderArrow("amount")}
+                  </th>
+                  <th
+                    onClick={() => handleSort("category")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Category {renderArrow("category")}
+                  </th>
+                  <th>Description</th>
+                  <th
+                    onClick={() => handleSort("date")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Date {renderArrow("date")}
+                  </th>
+                  <th style={{ width: "100px" }}>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {paginated.map((tx, index) => (
+                  <tr
+                    key={tx._id}
+                    className={index % 2 === 0 ? "bg-white" : "bg-light"}
+                  >
+                    <td
+                      className={
+                        tx.type === "income"
+                          ? "text-success fw-bold"
+                          : "text-danger fw-bold"
+                      }
+                    >
+                      {tx.type}
+                    </td>
+                    <td>₪{tx.amount}</td>
+                    <td>{tx.category}</td>
+                    <td>{tx.description}</td>
+                    <td>{new Date(tx.date).toLocaleDateString()}</td>
+                    <td className="text-center">
+                      <Link
+                        to={`/edit-transaction/${tx._id}`}
+                        className="btn btn-sm btn-outline-primary me-2"
+                      >
+                        🖉
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(tx._id)}
+                        className="btn btn-sm btn-outline-danger"
+                      >
+                        🗑️
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="d-flex justify-content-center mt-3">
+            <nav>
+              <ul className="pagination">
+                <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                  >
+                    Previous
+                  </button>
+                </li>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(i + 1)}
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+                <li
+                  className={`page-item ${
+                    currentPage === totalPages && "disabled"
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </>
       )}
     </div>
   );
