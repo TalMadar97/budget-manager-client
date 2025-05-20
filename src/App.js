@@ -13,6 +13,7 @@ import EditTransaction from "./pages/EditTransaction";
 import Settings from "./pages/Settings";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./responsive.css";
 
 const App = () => {
   return (

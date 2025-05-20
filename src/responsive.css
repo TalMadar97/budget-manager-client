@@ -1,0 +1,81 @@
+/* Make sure tables scroll horizontally on small screens */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  .navbar-nav {
+    text-align: center;
+  }
+
+  .navbar-nav .nav-item {
+    margin-bottom: 10px;
+  }
+
+  .navbar .btn {
+    width: 100%;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  h2, h4, h5 {
+    font-size: 1.5rem;
+  }
+
+  .alert {
+    font-size: 1rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 0.9rem;
+  }
+
+  .chart-container {
+    width: 100% !important;
+    overflow-x: auto;
+  }
+
+  .d-flex.gap-3 {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .table th, .table td {
+    font-size: 0.85rem;
+  }
+}
+
+/* Adjusts charts spacing */
+@media (max-width: 576px) {
+  .row > div[class*="col-"] {
+    margin-bottom: 1.5rem;
+  }
+
+  .navbar-toggler {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+}
+/* Adjusts the font size of the navbar brand */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+}  
