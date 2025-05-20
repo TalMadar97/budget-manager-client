@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // 🔄 מאזין לניווט
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
+  // ✅ עדכון סטטוס התחברות בעת מעבר בין עמודים
   useEffect(() => {
-    const handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem("token"));
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -21,15 +19,9 @@ const Navbar = () => {
   };
 
   const closeNavbar = () => {
-    const collapseEl = document.getElementById("navbarNav");
-    if (collapseEl && collapseEl.classList.contains("show")) {
-      const collapseInstance =
-        window.bootstrap.Collapse.getInstance(collapseEl);
-      if (collapseInstance) {
-        collapseInstance.hide();
-      } else {
-        new window.bootstrap.Collapse(collapseEl).hide();
-      }
+    const collapse = document.querySelector(".navbar-collapse");
+    if (collapse && collapse.classList.contains("show")) {
+      new window.bootstrap.Collapse(collapse).hide();
     }
   };
 
@@ -109,11 +101,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <NavLink
                     onClick={closeNavbar}
-                    className={({ isActive }) =>
-                      isActive
-                        ? "nav-link text-white fw-bold bg-primary px-3 rounded"
-                        : "nav-link text-primary"
-                    }
+                    className="nav-link text-primary"
                     to="/login"
                   >
                     Login
