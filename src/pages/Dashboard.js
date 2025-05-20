@@ -10,7 +10,6 @@ const Dashboard = () => {
 
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       toast.error("Unauthorized. Please login.");
       return navigate("/login");
@@ -24,9 +23,7 @@ const Dashboard = () => {
         },
       });
 
-      if (!res.ok) {
-        throw new Error("Unauthorized");
-      }
+      if (!res.ok) throw new Error("Unauthorized");
 
       const data = await res.json();
       setUser(data);
@@ -41,7 +38,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchUser();
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!user || loading)
     return <div className="p-4 text-center">Loading dashboard...</div>;

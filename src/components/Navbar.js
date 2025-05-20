@@ -1,14 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem("token"));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setIsLoggedIn(false);
     navigate("/login");
+  };
+
+  const closeNavbar = () => {
+    const collapseEl = document.getElementById("navbarNav");
+    if (collapseEl && collapseEl.classList.contains("show")) {
+      const collapseInstance =
+        window.bootstrap.Collapse.getInstance(collapseEl);
+      if (collapseInstance) {
+        collapseInstance.hide();
+      } else {
+        new window.bootstrap.Collapse(collapseEl).hide();
+      }
+    }
   };
 
   return (
@@ -28,38 +50,56 @@ const Navbar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
+
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <NavLink className="nav-link" to="/">
+              <NavLink onClick={closeNavbar} className="nav-link" to="/">
                 Home
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/dashboard">
+              <NavLink
+                onClick={closeNavbar}
+                className="nav-link"
+                to="/dashboard"
+              >
                 Dashboard
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/transactions">
+              <NavLink
+                onClick={closeNavbar}
+                className="nav-link"
+                to="/transactions"
+              >
                 Transactions
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/add-transaction">
+              <NavLink
+                onClick={closeNavbar}
+                className="nav-link"
+                to="/add-transaction"
+              >
                 Add Transaction
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/settings">
+              <NavLink
+                onClick={closeNavbar}
+                className="nav-link"
+                to="/settings"
+              >
                 Settings
               </NavLink>
             </li>
 
-            {!token ? (
+            {!isLoggedIn ? (
               <>
                 <li className="nav-item">
                   <NavLink
+                    onClick={closeNavbar}
                     className="nav-link text-success fw-bold"
                     to="/register"
                   >
@@ -68,6 +108,7 @@ const Navbar = () => {
                 </li>
                 <li className="nav-item">
                   <NavLink
+                    onClick={closeNavbar}
                     className={({ isActive }) =>
                       isActive
                         ? "nav-link text-white fw-bold bg-primary px-3 rounded"
@@ -81,7 +122,7 @@ const Navbar = () => {
               </>
             ) : (
               <li className="nav-item">
-                <button className="btn btn-danger" onClick={handleLogout}>
+                <button onClick={handleLogout} className="btn btn-danger ms-2">
                   Logout
                 </button>
               </li>
