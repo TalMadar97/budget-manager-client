@@ -17,11 +17,14 @@ const Dashboard = () => {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8181/api/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/auth/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!res.ok) throw new Error("Unauthorized");
 

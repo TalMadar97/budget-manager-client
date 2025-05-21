@@ -30,7 +30,7 @@ const TransactionChart = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          "http://localhost:8181/api/transactions/stats",
+          `${process.env.REACT_APP_API_URL}/transactions/stats`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -12,7 +12,7 @@ const Settings = () => {
     const fetchData = async () => {
       try {
         const profileRes = await fetch(
-          "http://localhost:8181/api/auth/profile",
+          `${process.env.REACT_APP_API_URL}/api/auth/profile`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -22,7 +22,7 @@ const Settings = () => {
         setNewBudget(userData.budget);
 
         const statsRes = await fetch(
-          "http://localhost:8181/api/transactions/stats",
+          `${process.env.REACT_APP_API_URL}/api/transactions/stats`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -40,14 +40,17 @@ const Settings = () => {
   const handleBudgetChange = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8181/api/users/budget", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ budget: newBudget }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/budget`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ budget: newBudget }),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to update budget");
       const data = await res.json();
@@ -61,14 +64,17 @@ const Settings = () => {
   const handleResetBudget = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8181/api/users/budget", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ budget: 0 }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/budget`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ budget: 0 }),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to reset budget");
 

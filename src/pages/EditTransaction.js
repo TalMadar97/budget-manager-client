@@ -15,7 +15,7 @@ const EditTransaction = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          `http://localhost:8181/api/transactions/${id}`,
+          `${process.env.REACT_APP_API_URL}/api/transactions/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -53,19 +53,22 @@ const EditTransaction = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8181/api/transactions/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          type,
-          amount: Number(amount),
-          category,
-          description,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/transactions/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            type,
+            amount: Number(amount),
+            category,
+            description,
+          }),
+        }
+      );
 
       if (!res.ok) {
         const err = await res.json();

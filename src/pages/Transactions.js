@@ -21,9 +21,12 @@ function Transactions() {
   const fetchTransactions = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8181/api/transactions", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/transactions`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (!response.ok) throw new Error("Failed to fetch transactions");
       const data = await response.json();
       setTransactions(data);
@@ -43,10 +46,13 @@ function Transactions() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8181/api/transactions/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/transactions/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (!res.ok) throw new Error("Failed to delete transaction");
 
       toast.success("Transaction deleted");

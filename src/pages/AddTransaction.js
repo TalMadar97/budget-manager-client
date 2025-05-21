@@ -22,19 +22,22 @@ const AddTransaction = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8181/api/transactions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          type,
-          amount: Number(amount),
-          category,
-          description,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/transaction`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            type,
+            amount: Number(amount),
+            category,
+            description,
+          }),
+        }
+      );
 
       if (!res.ok) {
         const err = await res.json();
