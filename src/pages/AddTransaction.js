@@ -23,7 +23,7 @@ const AddTransaction = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/transaction`,
+        `${process.env.REACT_APP_API_URL}/transactions`,
         {
           method: "POST",
           headers: {
