@@ -15,7 +15,7 @@ const EditTransaction = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/transactions/${id}`,
+          `${process.env.REACT_APP_API_URL}/transactions/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const EditTransaction = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/transactions/${id}`,
+        `${process.env.REACT_APP_API_URL}/transactions/${id}`,
         {
           method: "PUT",
           headers: {

@@ -22,7 +22,7 @@ function Transactions() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/transactions`,
+        `${process.env.REACT_APP_API_URL}/transactions`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -47,7 +47,7 @@ function Transactions() {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/transactions/${id}`,
+        `${process.env.REACT_APP_API_URL}/transactions/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
