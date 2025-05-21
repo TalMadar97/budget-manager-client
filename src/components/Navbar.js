@@ -4,16 +4,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // 🔄 מאזין לניווט
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
-  // ✅ עדכון סטטוס התחברות בעת מעבר בין עמודים
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
   }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user"); // ✅ חשוב למחוק גם את user
     setIsLoggedIn(false);
     navigate("/login");
   };
