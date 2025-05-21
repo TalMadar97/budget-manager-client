@@ -2,7 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  let user = null;
+
+  try {
+    const stored = JSON.parse(localStorage.getItem("user"));
+    if (stored && stored.name) {
+      user = stored;
+    }
+  } catch (e) {
+    user = null;
+  }
 
   return (
     <div className="container mt-4">
